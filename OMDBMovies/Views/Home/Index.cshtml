@@ -1,0 +1,84 @@
+﻿@model List<OMDBMovies.Controllers.OMDbMovie>
+
+@{
+    ViewBag.Title = "Movie Search";
+}
+
+<body style="background-image: url('/images/moviebg.png'); background-repeat: repeat;">
+
+<div class="container-fluid custom-container">
+    <a href="@Url.Action("Index", "Home")" style="text-decoration: none; color: inherit;">
+        <h1 class="text-center" style="font-family:'Lobster', cursive; font-size: 124px; color:white;">Welcome to Mikes OMDB Movie Search</h1>
+    </a>
+</div>
+<hr/>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @using (Html.BeginForm("SearchMovies", "Home", FormMethod.Get))
+            {
+                <div class="input-group mb-3">
+                    @Html.TextBox("searchInput", null, new { @class = "form-control rounded-pill", placeholder = "Enter title, year, and type (comma-separated)" })
+                    <button type="submit" class="btn btn-primary rounded-pill">Search</button> 
+                       
+                </div>
+           
+
+            }
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3 class="text-center" style="font-family:'Lobster', cursive; color:white">To Search For A favorite Movie of yours, Please search for a movie or T.V series by Title/ 
+                Name, Year or Type(eg Movie or Series) or search all 3 parametres for a specific results. Please use a comma between each parameter. The Results will then be populated below !
+               </h3>
+        </div>
+    </div>
+    <hr />
+
+    @if (Model != null && Model.Count > 0)
+{
+    <div class="row">
+        @foreach (var movie in Model)
+        {
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    @if (!string.IsNullOrEmpty(movie.Poster))
+                    {
+                        <img src="@movie.Poster" class="card-img-top" alt="Poster">
+                    }
+                    else
+                    {
+                        <img src="~/images/default-poster.jpg" class="card-img-top" alt="Default Poster">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@movie.Title</h5>
+                        <p class="card-text">Year: @movie.Year</p>
+                        <p class="card-text">Type: @movie.Type</p>
+                        <p class="card-text">Rated: @movie.imdbRating</p>
+                        <p class="card-text">Released: @movie.Released</p>
+                        <p class="card-text">Director: @movie.Director</p>
+                        <p class="card-text">Plot: @movie.Plot</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+    else
+    {
+        <p>No movies found.</p>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+
+</body>
